@@ -31,13 +31,4 @@ Se implementó un **Reducer** centralizado que maneja todas las mutaciones del e
 - **TypeScript**: Tipado estricto para componentes, interfaces de menú y acciones del reducer[cite: 7, 12, 13].
 - **Tailwind CSS**: Diseño moderno y responsivo[cite: 14].
 
-## 📐 Ejemplo de Implementación (Reducer)
 
-El estado se define mediante una interfaz clara para evitar errores de tipo durante el desarrollo:
-
-```typescript
-export type OrderState = {
-  order: OrderItem[];
-  tip: number;
-};
-```
