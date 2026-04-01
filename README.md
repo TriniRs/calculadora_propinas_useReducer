@@ -1,59 +1,43 @@
-# Calculadora de Propinas y Consumo 🍕🥤
+# Calculadora de Propinas y Consumo (React + TS + useReducer)
 
+Este proyecto es una aplicación interactiva para gestionar consumos en un restaurante, permitiendo seleccionar platillos del menú, ajustar propinas y calcular el total a pagar de forma dinámica.
 
-Una aplicación interactiva desarrollada con **React** y **TypeScript** diseñada para gestionar pedidos en un restaurante. Permite controlar el consumo de los clientes, seleccionar porcentajes de propina y calcular automáticamente los totales de la cuenta.
-Pagina: https://calculadora-propinas-rouge.vercel.app/ 
+> **Highlight Técnico:** La aplicación utiliza el hook **`useReducer`** para gestionar un estado complejo que incluye la lógica del pedido y el sistema de propinas, garantizando un flujo de datos unidireccional y fácil de depurar.
 
-## 🚀 Características Principales
+## 🚀 Funcionalidades
 
-- **Menú Dinámico**: Listado de productos cargados desde una base de datos local (`db.ts`).
-- **Gestión Inteligente de la Orden**:
-  - **Agregar Ítems**: Si el producto no existe en el consumo, se añade con cantidad 1.
-  - **Actualizar Cantidad**: Si el producto ya existe, se incrementa la cantidad automáticamente sin duplicar la fila en la interfaz.
-  - **Eliminar Ítems**: Opción para quitar productos específicos de la orden mediante su ID.
-- **Sistema de Propinas**: Selección mediante botones de radio (10%, 20%, 50%) que se aplican al subtotal.
-- **Cálculos en Tiempo Real**: Uso de `useMemo` para calcular Subtotal, Propina y Total a pagar de forma eficiente.
-- **Validación de Pago**: El botón para finalizar la orden se bloquea automáticamente si no hay consumos registrados.
+- **Menú Interactivo**: Selección de platillos desde una base de datos local[cite: 7, 11].
+- **Gestión de Pedido**:
+  - Agregar items al consumo (controlando cantidades de forma automática)[cite: 12].
+  - Eliminar items específicos del pedido[cite: 8, 12].
+  - Resetear la orden al finalizar el pago[cite: 9, 12].
+- **Sistema de Propinas**: Selección de porcentajes personalizados (10%, 20%, 50%) que se aplican al subtotal[cite: 10, 12].
+- **Cálculos en Tiempo Real**: Desglose detallado de Subtotal, Propina y Total Final utilizando `useMemo` para optimizar el rendimiento[cite: 9].
 
-## 🛠️ Tecnologías y Conceptos Aplicados
+## 🧠 Estructura del Reducer (`order-reducer.ts`)
 
-### 1. Custom Hooks (`useOrder`)
+Se implementó un **Reducer** centralizado que maneja todas las mutaciones del estado a través de acciones tipadas[cite: 12].
 
-Toda la lógica de negocio (agregar, quitar y limpiar la orden) está centralizada en el hook `useOrder.ts`. Esto permite mantener el componente `App.tsx` limpio y enfocado únicamente en la interfaz.
+### Acciones (Dispatch Events):
 
-### 2. Estado Inmutable y `prev`
+- `add-item`: Busca si el item ya existe en la orden para incrementar su cantidad o agregarlo como nuevo[cite: 12].
+- `remove-item`: Elimina un producto de la lista mediante su ID[cite: 12].
+- `add-tip`: Actualiza el porcentaje de propina seleccionado en el estado global[cite: 12].
+- `place-order`: Limpia el estado de la orden y la propina para comenzar un nuevo consumo[cite: 12].
 
-Para garantizar que la aplicación sea robusta ante acciones rápidas del usuario, se utiliza la actualización funcional del estado:
+## 🛠️ Stack Tecnológico
 
-setOrder((prev) => [...prev, newItem]);
+- **React 18** (Hooks: `useReducer`, `useMemo`)[cite: 9, 14].
+- **TypeScript**: Tipado estricto para componentes, interfaces de menú y acciones del reducer[cite: 7, 12, 13].
+- **Tailwind CSS**: Diseño moderno y responsivo[cite: 14].
 
-El uso de prev asegura que siempre estemos trabajando con el valor más actualizado de la orden en la memoria de React, evitando errores de sincronía.
+## 📐 Ejemplo de Implementación (Reducer)
 
-### 3. Transformación de Datos con TypeScript
+El estado se define mediante una interfaz clara para evitar errores de tipo durante el desarrollo:
 
-Se utiliza el operador spread (...item) para convertir un objeto de tipo MenuItem en un OrderItem, agregando la propiedad quantity necesaria para el carrito.
-
-## 📦 Estructura del Proyecto
-
-- src/hooks/useOrder.ts: Lógica principal del estado de la orden (addItem, removeItem, placeOrder).
-
-- src/components/: Componentes modulares como OrderContents, OrderTotals y TipPercentageForm.
-
-- src/data/db.ts: Fuente de datos con los elementos del menú.
-
-- src/helpers/index.ts: Funciones de utilidad para formateo de moneda en USD.
-
-- src/types/index.ts: Definiciones de tipos para MenuItem y OrderItem.
-
-💻 Instalación y Uso
-Instalar las dependencias:
-
-```
-npm install
-```
-
-Iniciar la aplicación:
-
-```
-npm run dev
+```typescript
+export type OrderState = {
+  order: OrderItem[];
+  tip: number;
+};
 ```
